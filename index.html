@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Messenger - Real-time Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Auth Container -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-box">
+            <div class="logo-container">
+                <div class="logo-icon">💬</div>
+                <h1 class="logo-text">Neon Messenger</h1>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <h2>Sign In</h2>
+                <div class="input-group">
+                    <input type="email" id="loginEmail" placeholder="Email" class="neon-input">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" placeholder="Password" class="neon-input">
+                </div>
+                <button id="loginBtn" class="neon-button">Sign In</button>
+                <button id="googleLoginBtn" class="google-button">
+                    <span class="google-icon">G</span> Sign in with Google
+                </button>
+                <p class="switch-text">Don't have an account? <span id="showRegister" class="switch-link">Register</span></p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <h2>Create Account</h2>
+                <div class="input-group">
+                    <input type="text" id="registerName" placeholder="Full Name" class="neon-input">
+                </div>
+                <div class="input-group">
+                    <input type="email" id="registerEmail" placeholder="Email" class="neon-input">
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="registerPhone" placeholder="Phone Number (+998...)" class="neon-input">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="registerPassword" placeholder="Password" class="neon-input">
+                </div>
+                <button id="registerBtn" class="neon-button">Create Account</button>
+                <p class="switch-text">Already have an account? <span id="showLogin" class="switch-link">Sign In</span></p>
+            </div>
+
+            <!-- Phone Verification -->
+            <div id="phoneVerification" class="auth-form" style="display: none;">
+                <h2>Verify Phone</h2>
+                <p class="verify-text">Enter the code sent to your phone</p>
+                <div class="input-group">
+                    <input type="text" id="verificationCode" placeholder="6-digit code" class="neon-input" maxlength="6">
+                </div>
+                <button id="verifyBtn" class="neon-button">Verify</button>
+                <button id="resendCode" class="resend-button">Resend Code</button>
+            </div>
+
+            <!-- Admin Login -->
+            <div id="adminLoginForm" class="auth-form" style="display: none;">
+                <h2>Admin Panel</h2>
+                <div class="input-group">
+                    <input type="text" id="adminUsername" placeholder="Username" class="neon-input">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="adminPassword" placeholder="Password" class="neon-input">
+                </div>
+                <button id="adminLoginBtn" class="neon-button admin-btn">Admin Login</button>
+                <p class="switch-text"><span id="backToLogin" class="switch-link">← Back to Login</span></p>
+            </div>
+        </div>
+        
+        <div class="auth-footer">
+            <p class="admin-link-text">Admin? <span id="showAdminLogin" class="switch-link">Click here</span></p>
+        </div>
+    </div>
+
+    <!-- Main Chat Container -->
+    <div id="chatContainer" class="chat-container" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <div class="user-avatar" id="currentUserAvatar">A</div>
+                    <div class="user-info">
+                        <h3 id="currentUserName">User</h3>
+                        <span class="user-status online">Online</span>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="icon-button" title="Logout">
+                    <span>🚪</span>
+                </button>
+            </div>
+
+            <div class="sidebar-tabs">
+                <button class="tab-button active" data-tab="chats">Chats</button>
+                <button class="tab-button" data-tab="private">Private</button>
+                <button class="tab-button" data-tab="support">Support</button>
+            </div>
+
+            <!-- Chats Tab -->
+            <div class="tab-content active" id="chatsTab">
+                <div class="search-container">
+                    <input type="text" id="searchUsers" placeholder="Search users..." class="search-input">
+                </div>
+                <div id="usersList" class="users-list"></div>
+            </div>
+
+            <!-- Private Chats Tab -->
+            <div class="tab-content" id="privateTab">
+                <div class="private-actions">
+                    <button id="createPrivateBtn" class="action-button">
+                        <span>➕</span> Create Private Chat
+                    </button>
+                    <button id="joinPrivateBtn" class="action-button">
+                        <span>🔗</span> Join via Code
+                    </button>
+                </div>
+                <div id="privateList" class="users-list"></div>
+            </div>
+
+            <!-- Support Tab -->
+            <div class="tab-content" id="supportTab">
+                <div class="support-info">
+                    <div class="support-icon">👨‍💼</div>
+                    <h3>Contact Admin</h3>
+                    <p>Send a message to administrator</p>
+                    <button id="contactAdminBtn" class="action-button">Send Message</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-user-info">
+                    <div class="chat-avatar" id="chatAvatar">S</div>
+                    <div>
+                        <h3 id="chatUserName">Select a chat</h3>
+                        <span id="chatUserStatus" class="chat-status"></span>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="icon-button" id="chatInfoBtn" title="Chat Info">ℹ️</button>
+                </div>
+            </div>
+
+            <div id="messagesContainer" class="messages-container">
+                <div class="welcome-message">
+                    <div class="welcome-icon">💬</div>
+                    <h2>Welcome to Neon Messenger</h2>
+                    <p>Select a chat to start messaging</p>
+                </div>
+            </div>
+
+            <div class="message-input-container">
+                <button class="icon-button" id="attachBtn" title="Attach">📎</button>
+                <input type="text" id="messageInput" placeholder="Type a message..." class="message-input">
+                <button class="icon-button send-button" id="sendBtn" title="Send">
+                    <span>➤</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <div class="admin-sidebar">
+            <div class="admin-header">
+                <h2>Admin Panel</h2>
+                <button id="adminLogoutBtn" class="icon-button">🚪</button>
+            </div>
+            <div class="admin-menu">
+                <button class="admin-menu-item active" data-section="dashboard">
+                    <span>📊</span> Dashboard
+                </button>
+                <button class="admin-menu-item" data-section="users">
+                    <span>👥</span> Users Management
+                </button>
+                <button class="admin-menu-item" data-section="messages">
+                    <span>💬</span> Support Messages
+                </button>
+                <button class="admin-menu-item" data-section="private">
+                    <span>🔒</span> Private Chats
+                </button>
+                <button class="admin-menu-item" data-section="settings">
+                    <span>⚙️</span> Settings
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <!-- Dashboard -->
+            <div class="admin-section active" id="dashboardSection">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <h3 id="totalUsers">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-info">
+                            <h3 id="totalMessages">0</h3>
+                            <p>Messages Today</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🟢</div>
+                        <div class="stat-info">
+                            <h3 id="onlineUsers">0</h3>
+                            <p>Online Now</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔒</div>
+                        <div class="stat-info">
+                            <h3 id="privateChats">0</h3>
+                            <p>Private Chats</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="recentActivity" class="activity-list"></div>
+                </div>
+            </div>
+
+            <!-- Users Management -->
+            <div class="admin-section" id="usersSection">
+                <h2>Users Management</h2>
+                <div class="search-container">
+                    <input type="text" id="adminSearchUsers" placeholder="Search users..." class="search-input">
+                </div>
+                <div id="adminUsersList" class="admin-users-list"></div>
+            </div>
+
+            <!-- Support Messages -->
+            <div class="admin-section" id="messagesSection">
+                <h2>Support Messages</h2>
+                <div id="supportMessagesList" class="support-messages-list"></div>
+            </div>
+
+            <!-- Private Chats -->
+            <div class="admin-section" id="privateSection">
+                <h2>Private Chats Management</h2>
+                <div id="adminPrivateList" class="admin-private-list"></div>
+            </div>
+
+            <!-- Settings -->
+            <div class="admin-section" id="settingsSection">
+                <h2>System Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <h3>Maintenance Mode</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="maintenanceMode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <h3>Allow New Registrations</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="allowRegistrations" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <h3>Auto Delete Messages (days)</h3>
+                        <input type="number" id="autoDeleteDays" value="30" min="0" class="neon-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="modal-overlay">
+        <!-- Create Private Chat Modal -->
+        <div id="createPrivateModal" class="modal">
+            <div class="modal-header">
+                <h3>Create Private Chat</h3>
+                <button class="close-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>Your private chat code:</p>
+                <div class="code-display">
+                    <span id="privateCode" class="private-code">--------</span>
+                    <button id="copyCodeBtn" class="icon-button" title="Copy">📋</button>
+                </div>
+                <p class="code-info">Share this code with others to join (Max 15 members)</p>
+            </div>
+        </div>
+
+        <!-- Join Private Chat Modal -->
+        <div id="joinPrivateModal" class="modal">
+            <div class="modal-header">
+                <h3>Join Private Chat</h3>
+                <button class="close-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="joinCode" placeholder="Enter 8-digit code" class="neon-input" maxlength="8">
+                <button id="joinCodeBtn" class="neon-button">Join Chat</button>
+            </div>
+        </div>
+
+        <!-- Chat Info Modal -->
+        <div id="chatInfoModal" class="modal">
+            <div class="modal-header">
+                <h3>Chat Information</h3>
+                <button class="close-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="chatInfoContent"></div>
+            </div>
+        </div>
+
+        <!-- User Details Modal (Admin) -->
+        <div id="userDetailsModal" class="modal">
+            <div class="modal-header">
+                <h3>User Details</h3>
+                <button class="close-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="userDetailsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="powered-by">Powered by Abduraxmon</div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="chat.js"></script>
+    <script type="module" src="admin.js"></script>
+    <script type="module" src="ui.js"></script>
+</body>
+</html>
